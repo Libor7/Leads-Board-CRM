@@ -1,11 +1,8 @@
 import { describe, it, expect } from "vitest";
 
-import {
-  leadsReducer,
-  type LeadsState,
-} from "../../context/leads/leads-reducer";
-import type { Lead } from "../../types";
-import type { LeadsAction } from "../../context/leads/leads-actions";
+import { leadsReducer, type LeadsState } from "@/context/leads/leads-reducer";
+import type { Lead } from "@/types";
+import type { LeadsAction } from "@/context/leads/leads-actions";
 
 const initialState: LeadsState = {
   leads: [],

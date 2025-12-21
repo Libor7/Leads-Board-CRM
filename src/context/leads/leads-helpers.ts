@@ -1,9 +1,4 @@
-import type {
-  Lead,
-  LeadHistoryEntry,
-  ChangeDetails,
-  LeadField,
-} from "../../types";
+import type { Lead, LeadHistoryEntry, ChangeDetails, LeadField } from "@/types";
 
 /**
  * Generates a unique ID for leads or history entries.

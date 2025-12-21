@@ -1,4 +1,4 @@
-import type { Lead, LeadHistory } from "../../types";
+import type { Lead, LeadHistory } from "@/types";
 import type { LeadsAction } from "./leads-actions";
 import { addLeadHandler, updateLeadHandler } from "./leads-reducer.handlers";
 

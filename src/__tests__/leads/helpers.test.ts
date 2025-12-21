@@ -1,9 +1,7 @@
 import { describe, it, expect } from "vitest";
 
-import type { Lead } from "../../types";
-import { createChangeDetails, createLeadHistoryEntry, generateId } from "../../context/leads/leads-helpers";
-
-
+import type { Lead } from "@/types";
+import { createChangeDetails, createLeadHistoryEntry, generateId } from "@/context/leads/leads-helpers";
 
 describe("leads-helpers", () => {
   describe("generateId", () => {

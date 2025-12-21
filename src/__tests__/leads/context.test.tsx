@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 
-import { LeadsProvider } from "../../context/leads/leads-provider";
-import { useLeadsContext } from "../../context/leads/use-leads-context";
-import type { Lead } from "../../types";
+import { LeadsProvider } from "@/context/leads/leads-provider";
+import { useLeadsContext } from "@/context/leads/use-leads-context";
+import type { Lead } from "@/types";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <LeadsProvider>{children}</LeadsProvider>

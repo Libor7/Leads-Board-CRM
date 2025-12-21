@@ -1,5 +1,5 @@
 import type { LeadsState } from "./leads-reducer";
-import type { Lead } from "../../types";
+import type { Lead } from "@/types";
 import { createLeadHistoryEntry, generateId } from "./leads-helpers";
 
 export const addLeadHandler = (state: LeadsState, lead: Lead): LeadsState => {
