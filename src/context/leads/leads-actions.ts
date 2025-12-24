@@ -1,12 +1,12 @@
-import type { Lead } from "@/types";
+import type { LeadDraft } from "@/types";
 
-type AddLeadAction = { type: "ADD_LEAD"; payload: Lead };
+type AddLeadAction = { type: "ADD_LEAD"; payload: LeadDraft };
 
 type UpdateLeadAction = {
   type: "UPDATE_LEAD";
   payload: {
     leadId: string;
-    changes: Partial<Lead>;
+    lead: LeadDraft;
   };
 };
 

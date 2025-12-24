@@ -1,45 +1,38 @@
 import type { LeadsState } from "./leads-reducer";
-import type { Lead } from "@/types";
+import type { Lead, LeadDraft, updateLeadPayload } from "@/types";
 import { createLeadHistoryEntry, generateId } from "./leads-helpers";
 
-export const addLeadHandler = (state: LeadsState, lead: Lead): LeadsState => {
-  const leadWithId: Lead = {
-    ...lead,
-    id: lead.id ?? generateId(), // TODO: Use backend-generated ID
+export const addLeadHandler = (
+  state: LeadsState,
+  draft: LeadDraft
+): LeadsState => {
+  const lead: Lead = {
+    id: generateId(), // TODO: Use backend-generated ID
+    ...draft,
   };
 
-  const historyEntry = createLeadHistoryEntry(leadWithId);
+  const historyEntry = createLeadHistoryEntry(lead);
 
   return {
-    leads: [...state.leads, leadWithId],
+    leads: [...state.leads, lead],
     history: [...state.history, historyEntry],
   };
 };
 
 export const updateLeadHandler = (
   state: LeadsState,
-  payload: {
-    leadId: string;
-    changes: Partial<Lead>;
-  }
+  { lead, leadId }: updateLeadPayload
 ): LeadsState => {
-  const oldLead = state.leads.find((lead) => lead.id === payload.leadId);
+  const oldLead = state.leads.find(({ id }) => id === leadId);
   if (!oldLead) return state;
 
   const newLead: Lead = {
-    ...oldLead,
-    ...payload.changes,
-    contact: {
-      ...oldLead.contact,
-      ...payload.changes.contact,
-    },
-    details: {
-      ...oldLead.details,
-      ...payload.changes.details,
-    },
+    id: oldLead.id,
+    ...lead,
   };
 
   const historyEntry = createLeadHistoryEntry(newLead, oldLead);
+  if (historyEntry.changes.length === 0) return state;
 
   return {
     leads: state.leads.map((lead) => (lead.id === newLead.id ? newLead : lead)),

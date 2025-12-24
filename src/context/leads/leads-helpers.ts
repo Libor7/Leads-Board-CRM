@@ -43,7 +43,7 @@ const compareValues = (a: unknown, b: unknown): boolean => {
 const createDefaultLead = (): Lead => ({
   id: "",
   company: "",
-  contact: { name: "", email: undefined },
+  contact: { name: "", email: "" },
   status: "New",
   details: { value: 0, tags: [], notes: "" },
 });
