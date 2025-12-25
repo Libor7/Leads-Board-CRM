@@ -1,7 +1,7 @@
+import { Outlet } from "@tanstack/react-router";
+
 import "./App.css";
 
-const App = () => {
-  return <></>;
-};
+const App = () => <Outlet />;
 
 export default App;
