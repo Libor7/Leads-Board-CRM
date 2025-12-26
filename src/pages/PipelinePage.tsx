@@ -1,10 +1,5 @@
-import { useLeadsContext } from "@/context/leads/use-leads-context";
+import LeadsPipeline from "@/features/leads/components/LeadsPipeline/LeadsPipeline";
 
-const PipelinePage = () => {
-  const { leads } = useLeadsContext(({ state }) => state);
-  console.log("leads: ", leads);
-
-  return null;
-};
+const PipelinePage = () => <LeadsPipeline />;
 
 export default PipelinePage;

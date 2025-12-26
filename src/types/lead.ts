@@ -1,3 +1,11 @@
+export const LEAD_STATUSES = [
+  "New",
+  "Contacted",
+  "Qualified",
+  "Won",
+  "Lost",
+] as const;
+
 export interface Lead {
   id: string;
   company: string;
@@ -18,7 +26,7 @@ export interface LeadDetails {
 }
 
 export type LeadDraft = Omit<Lead, "id">;
-export type LeadStatus = "New" | "Contacted" | "Qualified" | "Won" | "Lost";
+export type LeadStatus = (typeof LEAD_STATUSES)[number];
 export type updateLeadPayload = {
   leadId: string;
   lead: LeadDraft;
