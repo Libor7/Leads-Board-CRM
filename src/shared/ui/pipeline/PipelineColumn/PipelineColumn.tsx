@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 interface PipelineColumnProps {
   title: string;
@@ -8,10 +8,11 @@ interface PipelineColumnProps {
 
 const PipelineColumn = ({ title, children }: PipelineColumnProps) => {
   return (
-    <Box>
-      <Typography variant="h6">{title}</Typography>
-
-      <Box>{children}</Box>
+    <Box width={280}>
+      <Typography variant="subtitle1" mb={1}>
+        {title}
+      </Typography>
+      <Stack spacing={1}>{children}</Stack>
     </Box>
   );
 };

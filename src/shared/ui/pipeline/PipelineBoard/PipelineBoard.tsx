@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 
 import PipelineColumn from "../PipelineColumn/PipelineColumn";
 import type { PipelineColumnDef } from "../types";
+import styles from "./PipelineBoard.module.scss";
 
 interface PipelineBoardProps<TItem, TColumnId extends string = string> {
   columns: PipelineColumnDef<TColumnId>[];
@@ -17,7 +18,7 @@ const PipelineBoard = <TItem, TColumnId extends string = string>({
   renderItem,
 }: PipelineBoardProps<TItem, TColumnId>) => {
   return (
-    <Box>
+    <Box className={styles["board-container"]}>
       {columns.map((column) => {
         const columnItems = items.filter(
           (item) => getItemColumnId(item) === column.id

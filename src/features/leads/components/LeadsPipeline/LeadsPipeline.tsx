@@ -5,7 +5,7 @@ import { LEAD_COLUMNS } from "../../constants";
 import LeadCard from "../LeadCard/LeadCard";
 
 const LeadsPipeline = () => {
-  const leads = useLeadsContext((ctx) => ctx.state.leads);
+  const leads = useLeadsContext(({ state }) => state.leads);
 
   return (
     <PipelineBoard<Lead, LeadStatus>

@@ -1,17 +1,24 @@
 import { createRoute } from "@tanstack/react-router";
 
-import { rootRoute } from "./root";
-import PipelinePage from "@/pages/PipelinePage";
+import { pipelineRoute } from "./pipeline";
+import LeadsLayout from "@/layouts/LeadsLayout";
+import LeadsPipeline from "@/features/leads/components/LeadsPipeline/LeadsPipeline";
 import LeadDetailPage from "@/pages/LeadDetailPage";
 
 export const leadsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => pipelineRoute,
   path: "leads",
-  component: PipelinePage,
+  component: LeadsLayout,
+});
+
+export const leadsIndexRoute = createRoute({
+  getParentRoute: () => leadsRoute,
+  path: "/",
+  component: LeadsPipeline,
 });
 
 export const leadDetailRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "leads/$id",
+  getParentRoute: () => leadsRoute,
+  path: "$id",
   component: LeadDetailPage,
 });
