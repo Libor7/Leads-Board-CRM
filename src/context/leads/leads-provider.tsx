@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useReducer } from "react";
 
 import { LeadsContext } from "./leads-context";
-import { leadsReducer, type LeadsState } from "./leads-reducer";
+import { leadsReducer, type LeadsState } from "./reducer/leads.reducer";
 import type { Lead } from "@/types";
 
 const seedLeads: Lead[] = [
@@ -34,7 +34,7 @@ const initialState: LeadsState = {
   history: [],
 };
 
-export function LeadsProvider({ children }: PropsWithChildren) {
+export const LeadsProvider = ({ children }: PropsWithChildren) => {
   const [state, dispatch] = useReducer(leadsReducer, initialState);
 
   return (
@@ -42,4 +42,4 @@ export function LeadsProvider({ children }: PropsWithChildren) {
       {children}
     </LeadsContext.Provider>
   );
-}
+};

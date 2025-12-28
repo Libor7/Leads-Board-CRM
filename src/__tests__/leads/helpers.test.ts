@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 
 import type { Lead } from "@/types";
-import { createChangeDetails, createLeadHistoryEntry, generateId } from "@/context/leads/leads-helpers";
+import { generateId } from "@/shared/utils/id";
+import { createChangeDetails, createLeadHistoryEntry } from "@/context/leads/reducer/leads.handlers";
 
 describe("leads-helpers", () => {
   describe("generateId", () => {
@@ -125,3 +126,4 @@ describe("leads-helpers", () => {
     });
   });
 });
+

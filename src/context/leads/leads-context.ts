@@ -1,7 +1,7 @@
 import { createContext } from "use-context-selector";
 
-import { type LeadsState } from "./leads-reducer";
-import type { LeadsAction } from "./leads-actions";
+import { type LeadsState } from "./reducer/leads.reducer";
+import type { LeadsAction } from "./reducer/leads.actions";
 
 export interface LeadsContextValue {
   state: LeadsState;

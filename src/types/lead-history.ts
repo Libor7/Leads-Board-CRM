@@ -1,4 +1,5 @@
 export interface ChangeDetails {
+  id: string;
   field: LeadField;
   oldValue: unknown;
   newValue: unknown;

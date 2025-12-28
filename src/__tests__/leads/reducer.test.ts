@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { leadsReducer, type LeadsState } from "@/context/leads/leads-reducer";
 import type { LeadDraft } from "@/types";
-import type { LeadsAction } from "@/context/leads/leads-actions";
+import type { LeadsAction } from "@/context/leads/reducer/leads.actions";
 
 const initialState: LeadsState = {
   leads: [],

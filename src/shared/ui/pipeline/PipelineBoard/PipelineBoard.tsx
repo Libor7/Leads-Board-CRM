@@ -6,30 +6,22 @@ import styles from "./PipelineBoard.module.scss";
 
 interface PipelineBoardProps<TItem, TColumnId extends string = string> {
   columns: PipelineColumnDef<TColumnId>[];
-  items: TItem[];
-  getItemColumnId: (item: TItem) => TColumnId;
+  groupedItems: Record<TColumnId, TItem[]>;
   renderItem: (item: TItem) => React.ReactNode;
 }
 
-const PipelineBoard = <TItem, TColumnId extends string = string>({
+const PipelineBoard = <TItem, TColumnId extends string>({
   columns,
-  items,
-  getItemColumnId,
+  groupedItems,
   renderItem,
 }: PipelineBoardProps<TItem, TColumnId>) => {
   return (
     <Box className={styles["board-container"]}>
-      {columns.map((column) => {
-        const columnItems = items.filter(
-          (item) => getItemColumnId(item) === column.id
-        );
-
-        return (
-          <PipelineColumn key={column.id} title={column.title}>
-            {columnItems.map(renderItem)}
-          </PipelineColumn>
-        );
-      })}
+      {columns.map((column) => (
+        <PipelineColumn key={column.id} title={column.title}>
+          {groupedItems[column.id]?.map(renderItem)}
+        </PipelineColumn>
+      ))}
     </Box>
   );
 };
