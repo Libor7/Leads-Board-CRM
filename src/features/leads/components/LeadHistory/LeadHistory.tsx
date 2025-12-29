@@ -36,4 +36,6 @@ const LeadHistory = ({ leadId }: LeadHistoryProps) => {
   );
 };
 
+LeadHistory.whyDidYouRender = true;
+
 export default LeadHistory;

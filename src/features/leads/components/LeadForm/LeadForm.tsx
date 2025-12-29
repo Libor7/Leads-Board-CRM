@@ -1,6 +1,9 @@
 import { useState } from "react";
+
 import { Stack, TextField, Button } from "@mui/material";
 import type { Lead, LeadDraft } from "@/types";
+import type { LeadFormErrors } from "@/types/form-errors";
+import { validateLeadDraft } from "../../validators/lead-form.validator";
 
 interface LeadFormProps {
   lead: Lead;
@@ -21,6 +24,7 @@ const LeadForm = ({ lead, onSubmit }: LeadFormProps) => {
       notes: lead.details.notes,
     },
   });
+  const [errors, setErrors] = useState<LeadFormErrors>({});
 
   const changeHandler =
     (field: string) =>
@@ -31,17 +35,31 @@ const LeadForm = ({ lead, onSubmit }: LeadFormProps) => {
       }));
     };
 
+  const submitHandler = () => {
+    const validationErrors = validateLeadDraft(form);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    onSubmit(form);
+  };
+
   return (
     <Stack spacing={2}>
       <TextField
         label="Company"
         value={form.company}
+        error={!!errors.company}
+        helperText={errors.company}
         onChange={changeHandler("company")}
       />
-
       <TextField
         label="Contact name"
         value={form.contact.name}
+        error={!!errors.contactName}
+        helperText={errors.contactName}
         onChange={({ target }) =>
           setForm((prev) => ({
             ...prev,
@@ -49,10 +67,11 @@ const LeadForm = ({ lead, onSubmit }: LeadFormProps) => {
           }))
         }
       />
-
       <TextField
         label="Email"
         value={form.contact.email}
+        error={!!errors.contactEmail}
+        helperText={errors.contactEmail}
         onChange={({ target }) =>
           setForm((prev) => ({
             ...prev,
@@ -60,11 +79,12 @@ const LeadForm = ({ lead, onSubmit }: LeadFormProps) => {
           }))
         }
       />
-
       <TextField
         label="Value"
         type="number"
         value={form.details.value}
+        error={!!errors.value}
+        helperText={errors.value}
         onChange={({ target }) =>
           setForm((prev) => ({
             ...prev,
@@ -76,7 +96,7 @@ const LeadForm = ({ lead, onSubmit }: LeadFormProps) => {
         }
       />
 
-      <Button variant="contained" onClick={() => onSubmit(form)}>
+      <Button variant="contained" onClick={submitHandler}>
         Save
       </Button>
     </Stack>

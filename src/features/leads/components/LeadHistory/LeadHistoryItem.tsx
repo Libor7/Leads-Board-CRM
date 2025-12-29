@@ -34,4 +34,6 @@ const LeadHistoryItem = ({ item }: LeadHistoryItemProps) => {
   );
 };
 
+LeadHistoryItem.whyDidYouRender = true;
+
 export default LeadHistoryItem;

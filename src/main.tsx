@@ -1,3 +1,7 @@
+if (import.meta.env.DEV) {
+  await import("./wdyr");
+}
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";

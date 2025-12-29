@@ -41,4 +41,6 @@ const LeadCard = ({
   );
 };
 
+LeadCard.whyDidYouRender = true;
+
 export default LeadCard;

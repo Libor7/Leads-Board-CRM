@@ -17,4 +17,6 @@ const PipelineColumn = ({ title, children }: PipelineColumnProps) => {
   );
 };
 
+PipelineColumn.whyDidYouRender = true;
+
 export default PipelineColumn;
