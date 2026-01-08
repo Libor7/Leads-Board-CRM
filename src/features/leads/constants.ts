@@ -1,4 +1,4 @@
-import type { PipelineColumnDef } from "@/shared/ui/pipeline/types";
+import type { PipelineColumnDef } from "@/shared/ui/features/pipeline/types";
 import type { LeadStatus } from "@/types";
 
 export const LEAD_COLUMNS: PipelineColumnDef<LeadStatus>[] = [

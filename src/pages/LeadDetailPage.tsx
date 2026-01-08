@@ -1,16 +1,13 @@
-import { useParams } from "@tanstack/react-router";
-
 import { useLeadsContext } from "@/context/leads/use-leads-context";
 import { selectLeadById } from "@/context/leads/selectors/leads.selectors";
-import LeadForm from "@/features/leads/components/LeadForm/LeadForm";
-import NotFoundPage from "./NotFoundPage";
-import type { LeadDraft } from "@/types";
 import LeadHistory from "@/features/leads/components/LeadHistory/LeadHistory";
+import NotFoundPage from "./NotFoundPage";
+import LeadDetails from "@/features/leads/components/LeadDetails/LeadDetails";
+import { leadDetailRoute } from "@/routes/leads";
 
 const LeadDetailPage = () => {
-  const { id } = useParams({ from: "/pipeline/leads/$id" });
+  const { id } = leadDetailRoute.useParams() as { id: string };
   const lead = useLeadsContext(({ state }) => selectLeadById(id)(state));
-  const dispatch = useLeadsContext(({ dispatch }) => dispatch);
 
   if (!lead) {
     return (
@@ -21,19 +18,9 @@ const LeadDetailPage = () => {
     );
   }
 
-  const submitHandler = (draft: LeadDraft) => {
-    dispatch({
-      type: "UPDATE_LEAD",
-      payload: {
-        leadId: lead.id,
-        lead: draft,
-      },
-    });
-  };
-
   return (
     <>
-      <LeadForm lead={lead} onSubmit={submitHandler} />
+      <LeadDetails lead={lead} />
       <LeadHistory leadId={lead.id} />
     </>
   );

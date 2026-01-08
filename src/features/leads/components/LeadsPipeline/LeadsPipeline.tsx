@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useLeadsContext } from "@/context/leads/use-leads-context";
 import { selectLeads } from "@/context/leads/selectors/leads.selectors";
-import PipelineBoard from "@/shared/ui/pipeline/PipelineBoard/PipelineBoard";
+import PipelineBoard from "@/shared/ui/features/pipeline/PipelineBoard/PipelineBoard";
 import type { Lead, LeadStatus } from "@/types";
 import { LEAD_COLUMNS } from "../../constants";
 import LeadCard from "../LeadCard/LeadCard";

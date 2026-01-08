@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 
-interface PipelineColumnProps {
+type PipelineColumnProps = {
   title: string;
   children: ReactNode;
-}
+};
 
 const PipelineColumn = ({ title, children }: PipelineColumnProps) => {
   return (

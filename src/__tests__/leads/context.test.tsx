@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { LeadsProvider } from "@/context/leads/leads-provider";
 import { useLeadsContext } from "@/context/leads/use-leads-context";
-import type { LeadDraft } from "@/types";
+import type { LeadValues } from "@/features/leads/schemas/lead.schema";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <LeadsProvider>{children}</LeadsProvider>
@@ -32,11 +32,11 @@ describe("leads-context", () => {
       wrapper,
     });
 
-    const updatedDraft: LeadDraft = {
+    const updatedDraft: LeadValues = {
       company: "Acme Corp Updated",
       contact: { name: "John Updated", email: "john@new.com" },
       status: "Qualified",
-      details: { value: 9999, tags: ["vip"], notes: "Updated" },
+      details: { value: 9999, tags: "vip", notes: "Updated" },
     };
 
     act(() => {
@@ -44,14 +44,15 @@ describe("leads-context", () => {
         type: "UPDATE_LEAD",
         payload: {
           leadId: "1",
-          lead: updatedDraft,
+          updater: (lead) => ({
+            ...updatedDraft,
+            id: lead.id,
+          }),
         },
       });
     });
 
-    const updatedLead = result.current.state.leads.find(
-      (l) => l.id === "1"
-    )!;
+    const updatedLead = result.current.state.leads.find((l) => l.id === "1")!;
 
     expect(updatedLead.company).toBe("Acme Corp Updated");
     expect(updatedLead.status).toBe("Qualified");
@@ -68,12 +69,13 @@ describe("leads-context", () => {
         type: "UPDATE_LEAD",
         payload: {
           leadId: "nonexistent",
-          lead: {
+          updater: (lead) => ({
+            id: lead.id,
             company: "X",
             contact: { name: "Y", email: "" },
             status: "New",
-            details: { value: 0, tags: [], notes: "" },
-          },
+            details: { value: 0, tags: "", notes: "" },
+          }),
         },
       });
     });

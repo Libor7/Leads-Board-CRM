@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
-import { leadsReducer, type LeadsState } from "@/context/leads/leads-reducer";
-import type { LeadDraft } from "@/types";
 import type { LeadsAction } from "@/context/leads/reducer/leads.actions";
+import type { LeadValues } from "@/features/leads/schemas/lead.schema";
+import {
+  leadsReducer,
+  type LeadsState,
+} from "@/context/leads/reducer/leads.reducer";
 
 const initialState: LeadsState = {
   leads: [],
@@ -13,11 +16,11 @@ describe("leads-reducer", () => {
     it("should add a lead with generated id", () => {
       vi.spyOn(Math, "random").mockReturnValue(0.123456);
 
-      const draft: LeadDraft = {
+      const draft: LeadValues = {
         company: "ABC Corp",
         contact: { name: "John Doe", email: "john@abc.com" },
         status: "New",
-        details: { value: 50000, tags: [], notes: "" },
+        details: { value: 50000, tags: "", notes: "" },
       };
 
       const newState = leadsReducer(initialState, {
@@ -40,24 +43,24 @@ describe("leads-reducer", () => {
             company: "ABC Corp",
             contact: { name: "John Doe", email: "john@abc.com" },
             status: "New",
-            details: { value: 50000, tags: [], notes: "" },
+            details: { value: 50000, tags: "", notes: "" },
           },
         ],
         history: [],
       };
 
-      const updatedDraft: LeadDraft = {
+      const updatedDraft: LeadValues = {
         company: "XYZ Corp",
         contact: { name: "Jane Doe", email: "jane@xyz.com" },
         status: "Contacted",
-        details: { value: 75000, tags: ["hot"], notes: "Updated" },
+        details: { value: 75000, tags: "hot", notes: "Updated" },
       };
 
       const newState = leadsReducer(stateWithLead, {
         type: "UPDATE_LEAD",
         payload: {
           leadId: "1",
-          lead: updatedDraft,
+          updater: (lead) => ({ ...updatedDraft, id: lead.id }),
         },
       });
 
@@ -74,12 +77,13 @@ describe("leads-reducer", () => {
         type: "UPDATE_LEAD",
         payload: {
           leadId: "nonexistent",
-          lead: {
+          updater: (lead) => ({
+            id: lead.id,
             company: "X",
             contact: { name: "Y", email: "" },
             status: "New",
-            details: { value: 0, tags: [], notes: "" },
-          },
+            details: { value: 0, tags: "", notes: "" },
+          }),
         },
       });
 

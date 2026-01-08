@@ -5,9 +5,9 @@ import type { Lead } from "@/types";
 import { useClickable } from "@/shared/hooks/useClickable";
 import styles from "./LeadCard.module.scss";
 
-interface LeadCardProps {
+type LeadCardProps = {
   lead: Lead;
-}
+};
 
 const LeadCard = ({
   lead: { id, company, contact, details },

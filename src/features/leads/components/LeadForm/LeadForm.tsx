@@ -1,105 +1,119 @@
-import { useState } from "react";
-
 import { Stack, TextField, Button } from "@mui/material";
-import type { Lead, LeadDraft } from "@/types";
-import type { LeadFormErrors } from "@/types/form-errors";
-import { validateLeadDraft } from "../../validators/lead-form.validator";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface LeadFormProps {
+import { LEAD_STATUSES, type Lead } from "@/types";
+import { leadSchema, type LeadValues } from "../../schemas/lead.schema";
+import { LEAD_FIELD_LABELS } from "@/shared/constants/lead-fields";
+import { useLeadsContext } from "@/context/leads/use-leads-context";
+
+type LeadFormProps = {
   lead: Lead;
-  onSubmit: (draft: LeadDraft) => void;
-}
+};
 
-const LeadForm = ({ lead, onSubmit }: LeadFormProps) => {
-  const [form, setForm] = useState<LeadDraft>({
-    company: lead.company,
-    contact: {
-      name: lead.contact.name,
-      email: lead.contact.email,
-    },
-    status: lead.status,
+const LeadForm = ({ lead }: LeadFormProps) => {
+  const { id, ...rest } = lead;
+  const defaultValues: LeadValues = {
+    ...rest,
     details: {
-      value: lead.details.value,
-      tags: [...lead.details.tags],
-      notes: lead.details.notes,
+      ...rest.details,
+      tags: rest.details.tags ?? "",
     },
+  };
+  const dispatch = useLeadsContext(({ dispatch }) => dispatch);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<LeadValues>({
+    resolver: zodResolver(leadSchema),
+    defaultValues,
+    mode: "onBlur",
   });
-  const [errors, setErrors] = useState<LeadFormErrors>({});
 
-  const changeHandler =
-    (field: string) =>
-    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({
-        ...prev,
-        [field]: target.value,
-      }));
-    };
-
-  const submitHandler = () => {
-    const validationErrors = validateLeadDraft(form);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) {
-      return;
-    }
-
-    onSubmit(form);
+  const submitHandler = (values: LeadValues) => {
+    dispatch({
+      type: "UPDATE_LEAD",
+      payload: {
+        leadId: lead.id,
+        updater: (lead) => ({
+          ...lead,
+          ...values,
+        }),
+      },
+    });
   };
 
   return (
-    <Stack spacing={2}>
-      <TextField
-        label="Company"
-        value={form.company}
-        error={!!errors.company}
-        helperText={errors.company}
-        onChange={changeHandler("company")}
-      />
-      <TextField
-        label="Contact name"
-        value={form.contact.name}
-        error={!!errors.contactName}
-        helperText={errors.contactName}
-        onChange={({ target }) =>
-          setForm((prev) => ({
-            ...prev,
-            contact: { ...prev.contact, name: target.value },
-          }))
-        }
-      />
-      <TextField
-        label="Email"
-        value={form.contact.email}
-        error={!!errors.contactEmail}
-        helperText={errors.contactEmail}
-        onChange={({ target }) =>
-          setForm((prev) => ({
-            ...prev,
-            contact: { ...prev.contact, email: target.value },
-          }))
-        }
-      />
-      <TextField
-        label="Value"
-        type="number"
-        value={form.details.value}
-        error={!!errors.value}
-        helperText={errors.value}
-        onChange={({ target }) =>
-          setForm((prev) => ({
-            ...prev,
-            details: {
-              ...prev.details,
-              value: Number(target.value),
+    <form onSubmit={handleSubmit(submitHandler)}>
+      <Stack spacing={2}>
+        <TextField
+          label={LEAD_FIELD_LABELS["company"]}
+          {...register("company")}
+          error={!!errors.company}
+          helperText={errors.company?.message}
+        />
+        <TextField
+          label={LEAD_FIELD_LABELS["contact.name"]}
+          {...register("contact.name")}
+          error={!!errors.contact?.name}
+          helperText={errors.contact?.name?.message}
+        />
+        <TextField
+          label={LEAD_FIELD_LABELS["contact.email"]}
+          {...register("contact.email")}
+          error={!!errors.contact?.email}
+          helperText={errors.contact?.email?.message}
+        />
+        <TextField
+          label={LEAD_FIELD_LABELS["status"]}
+          {...register("status")}
+          error={!!errors.status}
+          helperText={errors.status?.message}
+          select
+          slotProps={{
+            select: {
+              native: true,
             },
-          }))
-        }
-      />
-
-      <Button variant="contained" onClick={submitHandler}>
-        Save
-      </Button>
-    </Stack>
+          }}
+        >
+          {LEAD_STATUSES.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </TextField>
+        <TextField
+          label={LEAD_FIELD_LABELS["details.value"]}
+          type="number"
+          {...register("details.value", { valueAsNumber: true })}
+          error={!!errors.details?.value}
+          helperText={errors.details?.value?.message}
+        />
+        <TextField
+          label={LEAD_FIELD_LABELS["details.tags"]}
+          {...register("details.tags")}
+          error={!!errors.details?.tags}
+          helperText={errors.details?.tags?.message}
+        />
+        <TextField
+          label={LEAD_FIELD_LABELS["details.notes"]}
+          {...register("details.notes")}
+          error={!!errors.details?.notes}
+          helperText={errors.details?.notes?.message}
+          multiline
+          minRows={3}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!isDirty || isSubmitting}
+        >
+          Save
+        </Button>
+      </Stack>
+    </form>
   );
 };
 

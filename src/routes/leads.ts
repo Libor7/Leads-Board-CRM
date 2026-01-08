@@ -20,5 +20,8 @@ export const leadsIndexRoute = createRoute({
 export const leadDetailRoute = createRoute({
   getParentRoute: () => leadsRoute,
   path: "$id",
+  parseParams: (params) => ({
+    id: params.id,
+  }),
   component: LeadDetailPage,
 });

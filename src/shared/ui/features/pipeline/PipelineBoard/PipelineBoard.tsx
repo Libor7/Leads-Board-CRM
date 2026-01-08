@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
 
-import PipelineColumn from "../PipelineColumn/PipelineColumn";
 import type { PipelineColumnDef } from "../types";
+import PipelineColumn from "../PipelineColumn/PipelineColumn";
 import styles from "./PipelineBoard.module.scss";
 
-interface PipelineBoardProps<TItem, TColumnId extends string = string> {
+type PipelineBoardProps<TItem, TColumnId extends string = string> = {
   columns: PipelineColumnDef<TColumnId>[];
   groupedItems: Record<TColumnId, TItem[]>;
   renderItem: (item: TItem) => React.ReactNode;
-}
+};
 
 const PipelineBoard = <TItem, TColumnId extends string>({
   columns,

@@ -2,17 +2,17 @@ import type { LeadsState } from "./leads.reducer";
 import type {
   ChangeDetails,
   Lead,
-  LeadDraft,
   LeadField,
   LeadHistoryEntry,
   updateLeadPayload,
 } from "@/types";
 import { generateId } from "@/shared/utils/id";
-import { compareValues } from "@/shared/utils/compareValues";
+import { areDifferent } from "@/shared/utils/compareValues";
+import type { LeadValues } from "@/features/leads/schemas/lead.schema";
 
 export const addLeadHandler = (
   state: LeadsState,
-  draft: LeadDraft
+  draft: LeadValues
 ): LeadsState => {
   const lead: Lead = {
     id: generateId(), // TODO: Use backend-generated ID
@@ -28,21 +28,18 @@ export const addLeadHandler = (
 
 export const updateLeadHandler = (
   state: LeadsState,
-  { lead, leadId }: updateLeadPayload
+  { leadId, updater }: updateLeadPayload
 ): LeadsState => {
   const oldLead = state.leads.find(({ id }) => id === leadId);
   if (!oldLead) return state;
 
-  const newLead: Lead = {
-    id: oldLead.id,
-    ...lead,
-  };
+  const newLead = updater(oldLead);
 
   const historyEntry = createLeadHistoryEntry(newLead, oldLead);
   if (historyEntry.changes.length === 0) return state;
 
   return {
-    leads: state.leads.map((lead) => (lead.id === newLead.id ? newLead : lead)),
+    leads: state.leads.map((lead) => (lead.id === leadId ? newLead : lead)),
     history: [...state.history, historyEntry],
   };
 };
@@ -76,7 +73,7 @@ const createDefaultLead = (): Lead => ({
   company: "",
   contact: { name: "", email: "" },
   status: "New",
-  details: { value: 0, tags: [], notes: "" },
+  details: { value: 0, tags: "", notes: "" },
 });
 
 /**
@@ -91,7 +88,7 @@ export const createChangeDetails = (
   for (const { field, get } of leadFields) {
     const oldValue = get(oldLead);
     const newValue = get(newLead);
-    if (compareValues(oldValue, newValue)) {
+    if (areDifferent(oldValue, newValue)) {
       changes.push({ id: generateId(), field, oldValue, newValue });
     }
   }

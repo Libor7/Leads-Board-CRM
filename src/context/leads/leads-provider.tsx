@@ -12,7 +12,7 @@ const seedLeads: Lead[] = [
     status: "New",
     details: {
       value: 1000,
-      tags: ["b2b"],
+      tags: "b2b",
       notes: "",
     },
   },
@@ -23,7 +23,7 @@ const seedLeads: Lead[] = [
     status: "Contacted",
     details: {
       value: 2500,
-      tags: ["enterprise"],
+      tags: "enterprise",
       notes: "Follow up next week",
     },
   },
