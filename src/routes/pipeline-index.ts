@@ -5,6 +5,6 @@ export const pipelineIndexRoute = createRoute({
   getParentRoute: () => pipelineRoute,
   path: "/",
   beforeLoad: () => {
-    throw redirect({ to: "/pipeline/leads" });
+    throw redirect({ to: "pipeline/leads" });
   },
 });

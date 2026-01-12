@@ -1,4 +1,7 @@
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 
 import type { Lead } from "@/types";

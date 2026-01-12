@@ -26,7 +26,7 @@ describe("leads-helpers", () => {
         company: "ABC",
         contact: { name: "John", email: "john@abc.com" },
         status: "New",
-        details: { value: 1000, tags: [], notes: "" },
+        details: { value: 1000, tags: "", notes: "" },
       };
       const newLead: Lead = { ...oldLead, status: "Contacted" };
 
@@ -42,7 +42,7 @@ describe("leads-helpers", () => {
         company: "ABC",
         contact: { name: "John", email: "john@abc.com" },
         status: "New",
-        details: { value: 1000, tags: [], notes: "" },
+        details: { value: 1000, tags: "", notes: "" },
       };
       const newLead: Lead = {
         ...oldLead,
@@ -76,11 +76,11 @@ describe("leads-helpers", () => {
         company: "ABC",
         contact: { name: "John", email: "john@abc.com" },
         status: "New",
-        details: { value: 1000, tags: ["tag1"], notes: "" },
+        details: { value: 1000, tags: "tag1", notes: "" },
       };
       const newLead: Lead = {
         ...oldLead,
-        details: { ...oldLead.details, tags: ["tag1", "tag2"] },
+        details: { ...oldLead.details, tags: "tag1, tag2" },
       };
 
       const changes = createChangeDetails(oldLead, newLead);
@@ -99,7 +99,7 @@ describe("leads-helpers", () => {
         company: "ABC",
         contact: { name: "John", email: "john@abc.com" },
         status: "New",
-        details: { value: 1000, tags: [], notes: "" },
+        details: { value: 1000, tags: "", notes: "" },
       };
 
       const changes = createChangeDetails(lead, lead);
@@ -114,7 +114,7 @@ describe("leads-helpers", () => {
         company: "ABC",
         contact: { name: "John", email: "john@abc.com" },
         status: "New",
-        details: { value: 1000, tags: [], notes: "" },
+        details: { value: 1000, tags: "", notes: "" },
       };
       const newLead: Lead = { ...oldLead, status: "Contacted" };
 

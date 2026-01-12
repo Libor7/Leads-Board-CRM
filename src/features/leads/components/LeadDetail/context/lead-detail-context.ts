@@ -1,6 +1,6 @@
-import { createContext } from "react";
+import { createContext } from "use-context-selector";
 import type { LeadDetailContextValue } from "../lead-detail.types";
 
-export const LeadDetailContext = createContext<LeadDetailContextValue | null>(
-  null
-);
+export const LeadDetailContext = createContext<
+  LeadDetailContextValue | undefined
+>(undefined);

@@ -1,6 +1,8 @@
-import Check from "@mui/icons-material/Check";
-import Close from "@mui/icons-material/Close";
-import Edit from "@mui/icons-material/Edit";
+import { lazy } from "react";
+
+const Check = lazy(() => import("@mui/icons-material/Check"));
+const Close = lazy(() => import("@mui/icons-material/Close"));
+const Edit = lazy(() => import("@mui/icons-material/Edit"));
 
 export const SUPPORTED_ICONS = {
   Check,

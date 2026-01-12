@@ -1,7 +1,12 @@
 import { Outlet } from "@tanstack/react-router";
+import { Suspense } from "react";
 
-import "./App.css";
+import PageLoader from "@/shared/ui/components/PageLoader/PageLoader";
 
-const App = () => <Outlet />;
+const App = () => (
+  <Suspense fallback={<PageLoader />}>
+    <Outlet />
+  </Suspense>
+);
 
 export default App;

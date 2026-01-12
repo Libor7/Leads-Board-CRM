@@ -1,4 +1,7 @@
-import { Box, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { memo } from "react";
 
 import { useLeadsContext } from "@/context/leads/use-leads-context";
 import { selectHistoryByLeadId } from "@/context/leads/selectors/history.selectors";
@@ -26,9 +29,9 @@ const Empty = ({
   </Typography>
 );
 
-const ItemHeader = () => (
+const ItemHeader = memo(() => (
   <Box width={10} height={10} borderRadius="50%" bgcolor="primary.main" />
-);
+));
 
 const LeadChange = ({ from, label, to }: LeadHistoryTypes.LeadChangeProps) => (
   <Stack direction="row" spacing={1}>

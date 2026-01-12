@@ -1,4 +1,6 @@
-import { Stack, TextField, Button } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,6 +14,7 @@ type LeadFormProps = {
 };
 
 const LeadForm = ({ lead }: LeadFormProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id, ...rest } = lead;
   const defaultValues: LeadValues = {
     ...rest,

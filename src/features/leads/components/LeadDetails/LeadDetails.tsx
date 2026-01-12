@@ -1,8 +1,11 @@
+import { lazy, Suspense } from "react";
+
 import { LEAD_FIELD_LABELS } from "@/shared/constants/lead-fields";
 import type { Lead, LeadField } from "@/types";
-import LeadDetail from "../LeadDetail/components/LeadDetail";
 import type { LeadFieldValue } from "../LeadDetail/lead-detail.types";
 import { flattenToDotNotation } from "@/shared/utils/flattenToDotNotation";
+
+const LeadDetail = lazy(() => import("../LeadDetail/components/LeadDetail"));
 
 type LeadDetailsProps = {
   lead: Lead;
@@ -12,7 +15,7 @@ const LeadDetails = ({ lead }: LeadDetailsProps) => {
   const flatLead = flattenToDotNotation(lead);
 
   return (
-    <>
+    <Suspense fallback={null}>
       {(Object.keys(LEAD_FIELD_LABELS) as LeadField[]).map((field) => (
         <LeadDetail
           key={field}
@@ -22,7 +25,7 @@ const LeadDetails = ({ lead }: LeadDetailsProps) => {
           value={flatLead[field] as LeadFieldValue}
         />
       ))}
-    </>
+    </Suspense>
   );
 };
 

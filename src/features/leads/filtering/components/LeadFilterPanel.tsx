@@ -11,7 +11,7 @@ type LeadFilterPanelProps = {
   allTags: string[];
 };
 
-export const LeadFilterPanel = ({
+const LeadFilterPanel = ({
   filters,
   onChange,
   allTags,
@@ -51,3 +51,5 @@ export const LeadFilterPanel = ({
     </Stack>
   );
 };
+
+export default LeadFilterPanel;

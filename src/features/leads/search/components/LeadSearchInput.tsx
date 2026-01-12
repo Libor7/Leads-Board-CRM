@@ -1,11 +1,12 @@
 import TextField from "@mui/material/TextField";
+import { memo } from "react";
 
 type LeadSearchInputProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-const LeadSearchInput = ({ value, onChange }: LeadSearchInputProps) => {
+const LeadSearchInput = memo(({ value, onChange }: LeadSearchInputProps) => {
   return (
     <TextField
       fullWidth
@@ -15,6 +16,6 @@ const LeadSearchInput = ({ value, onChange }: LeadSearchInputProps) => {
       onChange={(e) => onChange(e.target.value)}
     />
   );
-};
+});
 
 export default LeadSearchInput;

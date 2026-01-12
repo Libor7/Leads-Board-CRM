@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import type { PropsWithChildren } from "react";
 
 type LeadDetailLayoutProps = {
@@ -14,7 +15,7 @@ const LeadDetailLayout = ({
       <Typography variant="subtitle2" color="textSecondary">
         {label}
       </Typography>
-      <Box>{children}</Box>
+      <Box minHeight={(theme) => theme.spacing(7)}>{children}</Box>
     </Box>
   );
 };

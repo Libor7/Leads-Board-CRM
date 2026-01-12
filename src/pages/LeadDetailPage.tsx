@@ -1,9 +1,14 @@
+import { lazy, Suspense } from "react";
+
 import { useLeadsContext } from "@/context/leads/use-leads-context";
 import { selectLeadById } from "@/context/leads/selectors/leads.selectors";
-import LeadHistory from "@/features/leads/components/LeadHistory/LeadHistory";
 import NotFoundPage from "./NotFoundPage";
 import LeadDetails from "@/features/leads/components/LeadDetails/LeadDetails";
 import { leadDetailRoute } from "@/routes/leads";
+
+const LeadHistory = lazy(
+  () => import("@/features/leads/components/LeadHistory/LeadHistory")
+);
 
 const LeadDetailPage = () => {
   const { id } = leadDetailRoute.useParams() as { id: string };
@@ -21,7 +26,9 @@ const LeadDetailPage = () => {
   return (
     <>
       <LeadDetails lead={lead} />
-      <LeadHistory leadId={lead.id} />
+      <Suspense fallback={null}>
+        <LeadHistory leadId={lead.id} />
+      </Suspense>
     </>
   );
 };

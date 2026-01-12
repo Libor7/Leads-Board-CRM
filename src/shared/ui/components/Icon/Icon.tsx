@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { SUPPORTED_ICONS, type SupportedIcons } from "./icon.constants";
 
 type IconProps = {
@@ -7,7 +8,11 @@ type IconProps = {
 const Icon = ({ icon }: IconProps) => {
   const IconComponent = SUPPORTED_ICONS[icon];
 
-  return <IconComponent />;
+  return (
+    <Suspense fallback={null}>
+      <IconComponent />
+    </Suspense>
+  );
 };
 
 export default Icon;

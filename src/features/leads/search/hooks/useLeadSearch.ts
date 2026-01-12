@@ -1,62 +1,85 @@
-import { useEffect, useMemo, useState } from "react";
-import debounce from "lodash.debounce";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
-import type { Lead } from "@/types";
+import type { Lead, LeadStatus } from "@/types";
 import type { LeadSearchField } from "../model/search.types";
 import { matchSearch } from "../utils/matchSearch";
 import { LEAD_SEARCH_FIELDS } from "../model/search.config";
-
-const DEBOUNCE_MS = 300;
+import { leadsIndexRoute } from "@/routes/leads";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { LEAD_COLUMNS } from "../../constants";
 
 const DEFAULT_FIELDS: readonly LeadSearchField[] = LEAD_SEARCH_FIELDS.map(
   (f) => f.field
 );
 
 export const useLeadSearch = (leads: Lead[]) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate({ from: leadsIndexRoute.fullPath });
+  const search = leadsIndexRoute.useSearch();
+  const [searchQuery, setSearchQuery] = useState(search.search ?? "");
   const [activeFields, setActiveFields] =
     useState<readonly LeadSearchField[]>(DEFAULT_FIELDS);
+  const debouncedQuery = useDebouncedValue(searchQuery);
 
-  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+  const toggleField = useCallback((field: LeadSearchField) => {
+    setActiveFields((prev) => {
+      if (prev.includes(field)) {
+        if (prev.length === 1) return prev;
+        return prev.filter((f) => f !== field);
+      }
+      return [...prev, field] as readonly LeadSearchField[];
+    });
+  }, []);
+
+  const resetSearch = () => {
+    setSearchQuery("");
+    setActiveFields(DEFAULT_FIELDS);
+    navigate({
+      to: leadsIndexRoute.id,
+      search: {},
+    });
+  };
 
   useEffect(() => {
-    const handler = debounce(
-      (value: string) => setDebouncedQuery(value),
-      DEBOUNCE_MS
-    );
-
-    handler(searchQuery);
-    return () => handler.cancel();
-  }, [searchQuery]);
+    if (debouncedQuery) {
+      navigate({
+        to: leadsIndexRoute.id,
+        search: {
+          ...search,
+          search: debouncedQuery,
+        },
+      });
+    } else {
+      const newSearch = { ...search };
+      delete newSearch.search;
+      navigate({
+        to: leadsIndexRoute.id,
+        search: newSearch,
+      });
+    }
+  }, [debouncedQuery, navigate, search]);
 
   const searchedLeads = useMemo(() => {
     if (!debouncedQuery) return leads;
-
     return leads.filter((lead) =>
       matchSearch(lead, debouncedQuery, activeFields)
     );
   }, [leads, debouncedQuery, activeFields]);
 
-  const toggleField = (field: LeadSearchField) => {
-    setActiveFields((prev) => {
-      if (prev.includes(field)) {
-        return prev.length > 1 ? prev.filter((f) => f !== field) : prev;
-      }
-      return [...prev, field];
-    });
-  };
-
-  const resetSearch = () => {
-    setSearchQuery("");
-    setActiveFields(DEFAULT_FIELDS);
-  };
+  const groupedLeads = useMemo(() => {
+    return LEAD_COLUMNS.reduce((acc, col) => {
+      acc[col.id] = searchedLeads.filter(({ status }) => status === col.id);
+      return acc;
+    }, {} as Record<LeadStatus, Lead[]>);
+  }, [searchedLeads]);
 
   return {
-    searchedLeads,
+    groupedLeads,
     searchQuery,
     setSearchQuery,
     activeFields,
     toggleField,
     resetSearch,
+    hasResults: searchedLeads.length > 0,
   };
 };

@@ -1,8 +1,9 @@
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 
 import type { PipelineColumnDef } from "../types";
 import PipelineColumn from "../PipelineColumn/PipelineColumn";
 import styles from "./PipelineBoard.module.scss";
+import { memo } from "react";
 
 type PipelineBoardProps<TItem, TColumnId extends string = string> = {
   columns: PipelineColumnDef<TColumnId>[];
@@ -25,5 +26,6 @@ const PipelineBoard = <TItem, TColumnId extends string>({
     </Box>
   );
 };
+PipelineBoard.whyDidYouRender = true;
 
-export default PipelineBoard;
+export default memo(PipelineBoard) as typeof PipelineBoard;
