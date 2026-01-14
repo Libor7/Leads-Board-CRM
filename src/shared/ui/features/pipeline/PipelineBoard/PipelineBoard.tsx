@@ -4,6 +4,7 @@ import type { PipelineColumnDef } from "../types";
 import PipelineColumn from "../PipelineColumn/PipelineColumn";
 import styles from "./PipelineBoard.module.scss";
 import { memo } from "react";
+import type { LeadStatus } from "@/types";
 
 type PipelineBoardProps<TItem, TColumnId extends string = string> = {
   columns: PipelineColumnDef<TColumnId>[];
@@ -11,7 +12,7 @@ type PipelineBoardProps<TItem, TColumnId extends string = string> = {
   renderItem: (item: TItem) => React.ReactNode;
 };
 
-const PipelineBoard = <TItem, TColumnId extends string>({
+const PipelineBoard = <TItem, TColumnId extends LeadStatus>({
   columns,
   groupedItems,
   renderItem,
@@ -19,7 +20,7 @@ const PipelineBoard = <TItem, TColumnId extends string>({
   return (
     <Box className={styles["board-container"]}>
       {columns.map((column) => (
-        <PipelineColumn key={column.id} title={column.title}>
+        <PipelineColumn key={column.id} id={column.id} title={column.title}>
           {groupedItems[column.id]?.map(renderItem)}
         </PipelineColumn>
       ))}

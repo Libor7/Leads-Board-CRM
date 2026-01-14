@@ -17,7 +17,6 @@ const LeadFilterPanel = ({
   allTags,
 }: LeadFilterPanelProps) => {
   const statusFilter = filters.find((f) => f.field === "status")?.values ?? [];
-
   const tagFilter =
     filters.find((f) => f.field === "details.tags")?.values ?? [];
 
@@ -28,20 +27,17 @@ const LeadFilterPanel = ({
         selected={statusFilter as string[]}
         onChange={(v) => onChange("status", v)}
       />
-
       <FilterCheckboxGroup
         label="Status"
         options={LEAD_STATUSES}
         selected={statusFilter as string[]}
         onChange={(v) => onChange("status", v)}
       />
-
       <FilterToggleAll
         all={allTags}
         selected={tagFilter as string[]}
         onChange={(v) => onChange("details.tags", v)}
       />
-
       <FilterCheckboxGroup
         label="Tags"
         options={allTags}

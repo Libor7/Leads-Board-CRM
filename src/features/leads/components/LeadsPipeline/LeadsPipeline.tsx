@@ -5,6 +5,9 @@ import { useLeadFilters } from "@/features/leads/filtering/hooks/useLeadFilters"
 import { useLeadSearch } from "@/features/leads/search/hooks/useLeadSearch";
 import PipelineToolbar from "../PipelineToolbar/PipelineToolbar";
 import EmptyState from "@/shared/ui/features/EmptyState/EmptyState";
+import { PipelineDndContext } from "@/shared/ui/features/pipeline/dnd/PipelineDndContext";
+import { useLeadsContext } from "@/context/leads/use-leads-context";
+import type { Lead, LeadStatus } from "@/types";
 
 const LeadsPipeline = () => {
   const {
@@ -24,6 +27,18 @@ const LeadsPipeline = () => {
     resetSearch,
     hasResults,
   } = useLeadSearch(filteredLeads);
+  const dispatch = useLeadsContext(({ dispatch }) => dispatch);
+
+  const moveLead = (leadId: string, status: LeadStatus) => {
+    dispatch({
+      type: "UPDATE_LEAD",
+      payload: {
+        leadId,
+        updater: (lead: Lead) =>
+          lead.status === status ? lead : { ...lead, status },
+      },
+    });
+  };
 
   let msg: string | undefined;
   if (!hasLeads) {
@@ -49,11 +64,13 @@ const LeadsPipeline = () => {
         allTags={allTags}
         onResetAll={resetAllHandler}
       />
-      <PipelineBoard
-        columns={LEAD_COLUMNS}
-        groupedItems={groupedLeads}
-        renderItem={(lead) => <LeadCard key={lead.id} lead={lead} />}
-      />
+      <PipelineDndContext onMoveLead={moveLead}>
+        <PipelineBoard
+          columns={LEAD_COLUMNS}
+          groupedItems={groupedLeads}
+          renderItem={(lead) => <LeadCard key={lead.id} lead={lead} />}
+        />
+      </PipelineDndContext>
       {msg && <EmptyState message={msg} />}
     </>
   );

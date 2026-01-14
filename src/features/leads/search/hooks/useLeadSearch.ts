@@ -16,10 +16,13 @@ const DEFAULT_FIELDS: readonly LeadSearchField[] = LEAD_SEARCH_FIELDS.map(
 export const useLeadSearch = (leads: Lead[]) => {
   const navigate = useNavigate({ from: leadsIndexRoute.fullPath });
   const search = leadsIndexRoute.useSearch();
-  const [searchQuery, setSearchQuery] = useState(search.search ?? "");
+  const [draftQuery, setDraftQuery] = useState(search.search ?? "");
+  const [appliedQuery, setAppliedQuery] = useState(search.search ?? "");
+
+  const debouncedDraft = useDebouncedValue(draftQuery);
   const [activeFields, setActiveFields] =
     useState<readonly LeadSearchField[]>(DEFAULT_FIELDS);
-  const debouncedQuery = useDebouncedValue(searchQuery);
+  // const debouncedQuery = useDebouncedValue(searchQuery);
 
   const toggleField = useCallback((field: LeadSearchField) => {
     setActiveFields((prev) => {
@@ -32,7 +35,9 @@ export const useLeadSearch = (leads: Lead[]) => {
   }, []);
 
   const resetSearch = () => {
-    setSearchQuery("");
+    // setSearchQuery("");
+    setDraftQuery("");
+    setAppliedQuery("");
     setActiveFields(DEFAULT_FIELDS);
     navigate({
       to: leadsIndexRoute.id,
@@ -41,12 +46,16 @@ export const useLeadSearch = (leads: Lead[]) => {
   };
 
   useEffect(() => {
-    if (debouncedQuery) {
+    setAppliedQuery(debouncedDraft);
+  }, [debouncedDraft]);
+
+  useEffect(() => {
+    if (appliedQuery) {
       navigate({
         to: leadsIndexRoute.id,
         search: {
           ...search,
-          search: debouncedQuery,
+          search: appliedQuery,
         },
       });
     } else {
@@ -57,26 +66,36 @@ export const useLeadSearch = (leads: Lead[]) => {
         search: newSearch,
       });
     }
-  }, [debouncedQuery, navigate, search]);
+  }, [appliedQuery, navigate, search]);
 
   const searchedLeads = useMemo(() => {
-    if (!debouncedQuery) return leads;
+    if (!appliedQuery) return leads;
     return leads.filter((lead) =>
-      matchSearch(lead, debouncedQuery, activeFields)
+      matchSearch(lead, appliedQuery, activeFields)
     );
-  }, [leads, debouncedQuery, activeFields]);
+  }, [leads, appliedQuery, activeFields]);
 
   const groupedLeads = useMemo(() => {
-    return LEAD_COLUMNS.reduce((acc, col) => {
-      acc[col.id] = searchedLeads.filter(({ status }) => status === col.id);
-      return acc;
-    }, {} as Record<LeadStatus, Lead[]>);
+    const result = {} as Record<LeadStatus, Lead[]>;
+
+    for (const { id } of LEAD_COLUMNS) {
+      result[id] = [];
+    }
+
+    for (const lead of searchedLeads) {
+      result[lead.status].push(lead);
+    }
+    return result;
+    // return LEAD_COLUMNS.reduce((acc, col) => {
+    //   acc[col.id] = searchedLeads.filter(({ status }) => status === col.id);
+    //   return acc;
+    // }, {} as Record<LeadStatus, Lead[]>);
   }, [searchedLeads]);
 
   return {
     groupedLeads,
-    searchQuery,
-    setSearchQuery,
+    searchQuery: draftQuery,
+    setSearchQuery: setDraftQuery,
     activeFields,
     toggleField,
     resetSearch,
