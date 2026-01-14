@@ -1,4 +1,11 @@
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
 
 import type { LeadStatus } from "@/types";
 
@@ -11,6 +18,11 @@ export const PipelineDndContext = ({
   children,
   onMoveLead,
 }: PipelineDndContextProps) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    })
+  );
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -22,5 +34,13 @@ export const PipelineDndContext = ({
     onMoveLead(leadId, status);
   };
 
-  return <DndContext onDragEnd={handleDragEnd}>{children}</DndContext>;
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      {children}
+    </DndContext>
+  );
 };
